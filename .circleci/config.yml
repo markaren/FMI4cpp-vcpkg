@@ -1,0 +1,37 @@
+version: 2
+jobs:
+    build:
+        steps:
+          - checkout
+          - run:
+              name: Installing SUDO
+              command: 'apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*'
+          - run:
+              name: Installing tools
+              command: 'apt-get update && apt-get install -y build-essential cmake git curl unzip tar'
+          - run:
+              name: Installing vcpkg
+              command: 'git clone https://github.com/markaren/vcpkg.git'
+          - run:
+              name: Creating Binary Files
+              command: 'cd vcpkg && ./bootstrap-vcpkg.sh && git checkout update/fmi4cpp'
+          - restore_cache:
+              keys:
+                - cache-v2-{{ .Branch }}
+                - cache-v2
+          - run:
+              name: Install dependencies
+              command: 'cd /home/vcpkg && ./vcpkg upgrade --no-dry-run && ./vcpkg install fmi4cpp'
+          - save_cache:
+              key: cache-v2-{{ .Branch }}
+              paths:
+                - '/home/vcpkg/installed/'
+          - run:
+              name: Configuring
+              command: 'cmake -H. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/home/vcpkg/scripts/buildsystems/vcpkg.cmake'
+          - run:
+              name: Building
+              command: 'cmake --build build'
+          - run:
+              name: Unit tests
+              command: 'cd build/tests && ctest'
