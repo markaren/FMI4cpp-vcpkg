@@ -7,7 +7,7 @@ jobs:
         - checkout
         - run:
             name: Update vcpkg
-            command: 'cd /home/vcpkg && git remote add upstream https://github.com/markaren/vcpkg.git && git fetch upstream && git checkout upstream update/fmi4cpp'
+            command: 'cd /home/vcpkg && git remote add upstream https://github.com/markaren/vcpkg.git && git fetch upstream && git checkout upstream/update/fmi4cpp'
         - restore_cache:
             keys:
               - cache-v2-{{ .Branch }}
