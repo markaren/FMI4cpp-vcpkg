@@ -8,17 +8,9 @@ jobs:
         - run:
             name: Update vcpkg
             command: 'cd /home/vcpkg && git remote add upstream https://github.com/markaren/vcpkg.git && git fetch upstream && git checkout upstream/update/fmi4cpp'
-        - restore_cache:
-            keys:
-              - cache-v2-{{ .Branch }}
-              - cache-v2
         - run:
             name: Install dependencies
             command: 'cd /home/vcpkg && ./vcpkg upgrade --no-dry-run && ./vcpkg install fmi4cpp --recurse'
-        - save_cache:
-            key: cache-v2-{{ .Branch }}
-            paths:
-              - '/home/vcpkg/installed/'
         - run:
             name: Configuring
             command: 'cmake -H. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/home/vcpkg/scripts/buildsystems/vcpkg.cmake'
