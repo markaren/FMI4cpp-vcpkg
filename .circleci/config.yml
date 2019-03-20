@@ -8,9 +8,17 @@ jobs:
         - run:
             name: Update vcpkg
             command: 'cd /home/vcpkg && git remote add upstream https://github.com/markaren/vcpkg.git && git fetch upstream && git checkout upstream/update/fmi4cpp'
+        - restore_cache:
+          keys:
+            - cache-v1-{{ .Branch }}
+            - cache-v1
         - run:
             name: Install dependencies
             command: 'cd /home/vcpkg && ./vcpkg upgrade --no-dry-run && ./vcpkg install fmi4cpp --recurse'
+        - save_cache:
+            paths:
+            - ~/.conan
+            key: conan-cache-v1--{{ .Branch }}
         - run:
             name: Configuring
             command: 'cmake -H. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/home/vcpkg/scripts/buildsystems/vcpkg.cmake'
@@ -19,4 +27,4 @@ jobs:
             command: 'cmake --build build'
         - run:
             name: Unit tests
-            command: 'cd build/bin && ctest'
+            command: 'ctest'
