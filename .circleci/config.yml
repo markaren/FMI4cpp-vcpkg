@@ -14,7 +14,7 @@ jobs:
               - cache-v2
         - run:
             name: Install dependencies
-            command: 'cd /home/vcpkg && ./vcpkg upgrade --no-dry-run && ./vcpkg install fmi4cpp[curl]'
+            command: 'cd /home/vcpkg && ./vcpkg upgrade --no-dry-run && ./vcpkg install fmi4cpp[curl] --recurse'
         - save_cache:
             key: cache-v2-{{ .Branch }}
             paths:
