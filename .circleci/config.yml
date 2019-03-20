@@ -1,22 +1,20 @@
 version: 2
 jobs:
     build:
-        docker:
-          - image: ubuntu:18.04
+      docker:
+        - image: laht/vcpkg
         steps:
           - checkout
           - run:
-              name: Installing SUDO
-              command: 'apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*'
+              name: Update vcpkg
+              command: 'cd /home/vcpkg && git remote add upstream https://github.com/markaren/vcpkg.git && git fetch upstream && git checkout upstream update/fmi4cpp'
+          - restore_cache:
+              keys:
+                - cache-v2-{{ .Branch }}
+                - cache-v2
           - run:
-              name: Installing tools
-              command: 'apt-get update && apt-get install -y build-essential cmake git curl unzip tar'
-          - run:
-              name: Installing vcpkg
-              command: 'git clone https://github.com/markaren/vcpkg.git'
-          - run:
-              name: Creating Binary Files
-              command: 'cd vcpkg && ./bootstrap-vcpkg.sh && git checkout update/fmi4cpp'
+              name: Install dependencies
+              command: 'cd /home/vcpkg && ./vcpkg upgrade --no-dry-run && ./vcpkg install fmi4cpp'
           - restore_cache:
               keys:
                 - cache-v2-{{ .Branch }}
