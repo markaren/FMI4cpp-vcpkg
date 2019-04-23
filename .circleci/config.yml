@@ -27,4 +27,4 @@ jobs:
             command: 'cmake --build build'
         - run:
             name: Unit tests
-            command: 'ctest'
+            command: 'cd build && ctest'
