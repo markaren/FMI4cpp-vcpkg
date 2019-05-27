@@ -5,9 +5,9 @@ jobs:
         - image: laht/vcpkg
       steps:
         - checkout
-        - run:
-            name: Update vcpkg
-            command: 'cd /home/vcpkg && git remote add markaren https://github.com/markaren/vcpkg.git && git fetch markaren && git checkout markaren/fmi4cpp-0.7.0'
+#        - run:
+#            name: Update vcpkg
+#            command: 'cd /home/vcpkg && git remote add markaren https://github.com/markaren/vcpkg.git && git fetch markaren && git checkout markaren/fmi4cpp-0.7.0'
         - restore_cache:
             keys:
                 - cache-v1-{{ .Branch }}
